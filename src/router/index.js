@@ -5,10 +5,12 @@ import Home from '@/components/Home.vue'
 
 import CreateMeetups from '@/components/Meetup/CreateMeetups.vue'
 import Meetups from '@/components/Meetup/Meetups.vue'
+import Meetup from '@/components/Meetup/Meetup'
 
 import Profile from '@/components/User/Profile.vue'
 import Signup from '@/components/User/Signup.vue'
 import Signin from '@/components/User/Signin.vue'
+import Experiment from '@/components/experiment/Experiment.vue'
 
 Vue.use(Router)
 
@@ -31,6 +33,12 @@ export default new Router({
       component: CreateMeetups,
     },
     {
+      path: '/meetup/:id',
+      name: 'Meetup',
+      props: true,
+      component: Meetup,
+    },
+    {
       path: '/profile',
       name: 'Profile',
       component: Profile,
@@ -44,6 +52,11 @@ export default new Router({
       path: '/signin',
       name: 'Signin',
       component: Signin,
+    },
+    {
+      path: '/experiment',
+      name: 'Experiment',
+      component: Experiment,
     }
     
   ]
