@@ -18,14 +18,14 @@
         </v-card-media>
         <v-card-title>
           <div>
-            <span class="gray--text">{{ meetup.date }}</span><br>
+            <span class="gray--text">{{ meetup.date | date }}</span><br>
             <span class="headline mb-0 ">{{ meetup.title }}</span><br>
-            <span class="custom-style">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.</span>
+            <span class="custom-style">{{ meetup.description }}</span>
           </div>
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn round color="orange" dark>
+          <v-btn round color="orange" dark class="ml-2" >
             <v-icon left>person_add</v-icon>
             Reginster
           </v-btn>

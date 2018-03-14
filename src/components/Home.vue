@@ -15,11 +15,11 @@
       <v-flex xs10 offset-xs1>
         <v-carousel xs8 sm8 style="cursor: pointer;">
           <v-carousel-item 
-          v-for="item in meetups" 
-          :src="item.imageUrl" 
-          :key="item.id" 
-          @click="onLoadMeetup(item.id)" >
-            <div class="title">{{ item.title }}</div>
+          v-for="meetup in meetups" 
+          :src="meetup.imageUrl" 
+          :key="meetup.id" 
+          v-on:click="onLoadMeetup()" >
+            <div class="title">{{ meetup.title }}</div>
           </v-carousel-item>
         </v-carousel>
       </v-flex>
@@ -42,8 +42,8 @@
       }
     },
     methods: {
-      onLoadMeetup: function(id) {
-        // console.log('ON load Meetup');
+      onLoadMeetup: function() {  // this functito is not being called.
+        console.log('ON load Meetup');
         this.$router.push('/meetup/' + id);
       }
     },

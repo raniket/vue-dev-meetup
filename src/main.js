@@ -2,8 +2,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
-import { store }  from './store'
+import { store } from './store'
+import DateFilter from './filters/date'
 import 'vuetify/dist/vuetify.min.css'
+
+Vue.filter('date', DateFilter)
 
 Vue.use(Vuetify, { theme: {
   // primary: '#ee44aa',
