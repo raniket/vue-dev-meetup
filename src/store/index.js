@@ -65,6 +65,8 @@ export const store = new Vuex.Store({
       },
     ],
     user: null,
+    loading: false,
+    error: null,
   },
   mutations: { // get data from actions and set data values in state.
     createMeetup(state, payload) {
@@ -72,7 +74,16 @@ export const store = new Vuex.Store({
     },
     setUser(state, payload) {
       state.user = payload;
-    }
+    },
+    setLoading(state, payload) {
+      state.loading = payload;
+    },
+    setError(state, payload) {
+      state.error = payload;
+    },
+    clearError(state) {
+      state.error = null;
+    },
   },
   // the section computes the data, communication from server and send data to mutation.
   actions: { // all data from components comes here for processign.
@@ -87,9 +98,12 @@ export const store = new Vuex.Store({
       };
       commit('createMeetup', meetup);
     },
-    signUserUp({commit}, payload) { // creat a new user action
+    signUserUp({ commit }, payload) { // creat a new user action
+      commit('setLoading', true);
+      commit('clearError');
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password) // communication to firebase
         .then(data => {
+          commit('setLoading', false);
           const newUser = {
             id: data.uid,
             registeredMeetups: [],
@@ -97,14 +111,19 @@ export const store = new Vuex.Store({
           commit('setUser', newUser)
         })
         .catch(error => {
+          commit('setLoading', false);
+          commit('setError', error);
           console.log('SOME ERROR HAS OCCURED');
           console.log('error.code: ', error.code);
           console.log('error.message: ', error.message);
         })
     },
     signUserIn({ commit }, payolad) {
+      commit('setLoading', true);
+      commit('clearError');
       firebase.auth().signInWithEmailAndPassword(payolad.email, payolad.password)
         .then(data => {
+          commit('setLoading', false);
           const userData = {
             id: data.uid,
             registeredMeetups: [],
@@ -112,6 +131,8 @@ export const store = new Vuex.Store({
           commit('setUser', userData);
         })
         .catch(error => {
+          commit('setLoading', false);
+          commit('setError', error);
           console.log('SOME ERROR HAS OCCURED IN user signin process');
           console.log('error.code: ', error.code);
           console.log('error.message: ', error.message);
@@ -128,6 +149,9 @@ export const store = new Vuex.Store({
           console.log('error.code: ', error.code);
           console.log('error.message: ', error.message);
         })
+    },
+    clearError({ commit }) {
+      commit('clearError');  
     }
   },
   // portal to get the data form state.
@@ -149,6 +173,12 @@ export const store = new Vuex.Store({
     },
     user (state) {
       return state.user;
+    },
+    loading (state) {
+      return state.loading;
+    },
+    error (state) {
+      return state.error;
     }
   }
 })

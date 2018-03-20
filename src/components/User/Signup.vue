@@ -5,6 +5,13 @@
         <h2 style="color: #FF8F00" class="text-sm-center text-xs-center">{{ signUpTitle}}</h2>
       </v-flex>
     </v-layout>
+
+    <v-layout row v-if="error">
+      <v-flex xs12 sm6 offset-sm3>
+        <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+      </v-flex>
+    </v-layout>
+
     <v-layout row >
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
@@ -58,7 +65,12 @@
               <!-- submit button -->
               <v-layout row>
                 <v-flex xs12 >
-                  <v-btn type="sumit" class="primary" round :disabled="!formIsValid">Sign up</v-btn>
+                  <v-btn type="sumit" class="primary" round :loading="loading" :disabled="!formIsValid">
+                    Sign up
+                    <span slot="loader" class="custom-loader">
+                      <v-icon light>cached</v-icon>
+                    </span>
+                    </v-btn>
                 </v-flex>
               </v-layout>
 
@@ -84,7 +96,7 @@
 
     computed: {
       formIsValid () { // for button
-        return (this.email !== '' && this.password !== '' && this.confirmPassword !== '' && this.isValidLength === true && this.comparePassword === true);
+        return (this.email !== '' && this.password !== '' && this.confirmPassword !== '' && this.isValidLength === true && this.comparePassword === true && this.loading === false);
       },
       isValidLength () { // for password
         return this.password.length < 6? 'Password should be atleast 6 charachers long' : true;
@@ -94,6 +106,12 @@
       },
       user () { // track the change in user state.
         return this.$store.getters.user;
+      },
+      loading () {
+        return this.$store.getters.loading;
+      },
+      error () {
+        return this.$store.getters.error;
       }
     },
     watch: {
@@ -109,11 +127,55 @@
     methods: {
       onSignup() { // sign up button method.
         this.$store.dispatch('signUserUp', { email: this.email, password: this.password});
+      },
+      onDismissed () {
+        this.$store.dispatch('clearError');
       }
     }
   }
 </script>
 
-<style scoped>
+<style scoped >
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
 
 </style>

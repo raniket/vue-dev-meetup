@@ -8,7 +8,11 @@ import { store } from './store'
 import DateFilter from './filters/date'
 import 'vuetify/dist/vuetify.min.css'
 
+import Alert from './components/Shared/Alert.vue'
+
 Vue.filter('date', DateFilter)
+
+Vue.component('app-alert', Alert);
 
 Vue.use(Vuetify, { theme: {
   // primary: '#ee44aa',
