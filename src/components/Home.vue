@@ -18,7 +18,9 @@
           v-for="meetup in meetups" 
           :src="meetup.imageUrl" 
           :key="meetup.id" 
-          v-on:click="onLoadMeetup()" >
+          @click="onLoadMeetup(meetup.id)"
+          style="text-decoration:none"
+          :to="'/meetup/'+meetup.id" >
             <div class="title">{{ meetup.title }}</div>
           </v-carousel-item>
         </v-carousel>
@@ -36,14 +38,18 @@
 
 <script>
   export default {
+    data () {
+      return {
+        loggedin: this.user,
+      }
+    },
     computed: {
       meetups: function() {
         return this.$store.getters.featuredMeetups
-      }
+      },
     },
     methods: {
-      onLoadMeetup: function() {  // this functito is not being called.
-        console.log('ON load Meetup');
+      onLoadMeetup: function(id) {  // go to specific event. NOT WORKING
         this.$router.push('/meetup/' + id);
       }
     },

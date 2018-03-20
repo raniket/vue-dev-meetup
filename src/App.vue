@@ -53,15 +53,25 @@ export default {
   data() {
     return {
       sideNav: false,
-      menuItems: [
-        {icon: 'view_list', title: 'View Events', link: '/meetups'},
-        {icon: 'create', title: 'Create Events', link: '/meetup/new'},
-        {icon: 'person', title: 'Profile', link: '/profile'},
+    };
+  },
+  computed: {
+    menuItems () {
+      let menuItems = [
         {icon: 'face', title: 'Sign up', link: '/signup'},
         {icon: 'lock', title: 'Sing in', link: '/signin'},
-        // {icon: 'extension', title: 'Experiments', link: '/experiment'}
-      ]
-    };
+      ];
+      if(this.$store.getters.user !== null && this.$store.getters.user) {
+        menuItems = [
+          {icon: 'view_list', title: 'View Events', link: '/meetups'},
+          {icon: 'create', title: 'Create Events', link: '/meetup/new'},
+          {icon: 'person', title: 'Profile', link: '/profile'},
+          {icon: 'lock', title: 'Sign out', link: '/signout'}
+          // {icon: 'extension', title: 'Experiments', link: '/experiment'},
+        ];
+      }
+      return menuItems;
+    }
   },
   name: "App"
 };

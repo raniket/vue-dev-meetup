@@ -48,7 +48,7 @@
                   <v-container fill-height fluid>
                     <v-layout fill-height>
                       <v-flex xs12 align-end flexbox>
-                        <span class="headline">This is the preview of uploaded image</span>
+                        <span class="headline">This is the preview of image</span>
                       </v-flex>
                     </v-layout>
                   </v-container>
@@ -87,9 +87,6 @@
             </v-flex>
           </v-layout>
 
-          <p>date: {{ date }}</p>
-          <p>time: {{ time }}</p>
-          <p>input date: {{ submittableDateTime }}</p>
         </form>
       </v-flex>
     </v-layout>
@@ -99,14 +96,14 @@
 
 <script>
   export default {
-    data() {
+    data () {
       return {
         title: '',
         location: '',
         date: new Date().toISOString().split('T')[0],
         time: new Date(),
         imageUrl: '',
-        description: '',
+        description: ''
       }
     },
 

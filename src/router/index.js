@@ -10,6 +10,7 @@ import Meetup from '@/components/Meetup/Meetup'
 import Profile from '@/components/User/Profile.vue'
 import Signup from '@/components/User/Signup.vue'
 import Signin from '@/components/User/Signin.vue'
+import Signout from '@/components/User/Signout.vue'
 import Experiment from '@/components/experiment/Experiment.vue'
 
 Vue.use(Router)
@@ -57,6 +58,11 @@ export default new Router({
       path: '/experiment',
       name: 'Experiment',
       component: Experiment,
+    },
+    {
+      path: '/signout',
+      name: 'Signout',
+      component: Signout,
     }
     
   ]

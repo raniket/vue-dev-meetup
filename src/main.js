@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App'
+import * as firebase from 'firebase'
+
 import router from './router'
 import Vuetify from 'vuetify'
 import { store } from './store'
@@ -17,8 +19,7 @@ Vue.use(Vuetify, { theme: {
   info: '#2196F3',
   success: '#4CAF50',
   warning: '#FFC107',
-  buttons: '#FF8F00',
-  meetup_card_color: '#000BDC1',
+  buttons: '#FF8F00'
 }})
 
 Vue.config.productionTip = false
@@ -28,5 +29,22 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    firebase.initializeApp({
+      apiKey: "AIzaSyDNfxxSpN0nMrRfNfrPNtkw5lVOLT01mXE",
+      authDomain: "developers-community-380f0.firebaseapp.com",
+      databaseURL: "https://developers-community-380f0.firebaseio.com",
+      projectId: "developers-community-380f0",
+      storageBucket: "developers-community-380f0.appspot.com",
+      messagingSenderId: "1047521904901"
+
+      // apiKey: process.env.API_KEY,
+      // authDomain: process.env.AUTH_DOMAIN,
+      // databaseURL: process.env.DATABASE_URL,
+      // projectId: process.env.PROJECT_ID,
+      // storageBucket: process.env.STORAGE_BUCKET,
+      // messagingSenderId: process.env.MESSAGING_SENDER_ID
+    }) 
+  }
 })

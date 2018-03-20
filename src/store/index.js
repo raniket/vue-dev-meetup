@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as firebase from 'firebase'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  state: {
+  state: { // all application data lives here.
     loadedMeetups: [
       {
         imageUrl: 'https://odis.homeaway.com/odis/destination/2b4108ba-cbdb-4505-8950-57b997042ef9.hw1.jpg',
         id: '1',
         title: 'Android - This week in Los Angeles',
-        date: '2018-03-15',
+        date: new Date(),
         location: 'Los Angeles',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
@@ -18,7 +19,7 @@ export const store = new Vuex.Store({
         imageUrl: 'http://www.barfadeiasi.ro/wp-content/uploads/2017/11/londra-t.jpg',
         id: '2',
         title: 'Machine Learning - This week in London',
-        date: '2018-03-16',
+        date: new Date(),
         location: 'London',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
@@ -26,7 +27,7 @@ export const store = new Vuex.Store({
         imageUrl: 'https://www.gezitta.com/wp-content/uploads/2018/01/Berlin-ku%C5%9Fbak%C4%B1%C5%9F%C4%B1-manzaras%C4%B1.jpg',
         id: '3',
         title: 'iOS - This week in Berlin',
-        date: '2018-03-16',
+        date: new Date(),
         location: 'Berlin',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
@@ -34,7 +35,7 @@ export const store = new Vuex.Store({
         imageUrl: 'https://www.deccanjobs.com/wp-content/uploads/2017/03/Bangalore-City.jpg',
         id: '4',
         title: 'Node.js - This week in Bangalore',
-        date: '2018-03-26',
+        date: new Date(),
         location: 'Bangalore',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
@@ -42,7 +43,7 @@ export const store = new Vuex.Store({
         imageUrl: 'http://theflightfinder.com/wp-content/uploads/2017/12/paris.jpg',
         id: '5',
         title: 'Go lang - Next week in Paris',
-        date: '2018-03-24',
+        date: new Date(),
         location: 'Paris',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
@@ -50,7 +51,7 @@ export const store = new Vuex.Store({
         imageUrl: 'http://assets.nydailynews.com/polopoly_fs/1.3004701.1490126108!/img/httpImage/image.jpg_gen/derivatives/landscape_1200/473804254.jpg',
         id: '6',
         title: 'Data Science - Next week in New York',
-        date: '2018-03-24',
+        date: new Date(),
         location: 'New York',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
@@ -58,23 +59,24 @@ export const store = new Vuex.Store({
         imageUrl: 'http://ecowallpapers.net/wp-content/uploads/3912_sidney.jpg',
         id: '7',
         title: 'Big Data - This week in Sidney',
-        date: '2018-03-17',
+        date: new Date(),
         location: 'Sidney',
         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
       },
     ],
-    user: {
-      id: '132',
-      registeredMeetups: ['1'],
-    }
+    user: null,
   },
-  mutations: {
+  mutations: { // get data from actions and set data values in state.
     createMeetup(state, payload) {
       state.loadedMeetups.push(payload);
+    },
+    setUser(state, payload) {
+      state.user = payload;
     }
   },
-  actions: {
-    createMeetup({ commit }, payload) {
+  // the section computes the data, communication from server and send data to mutation.
+  actions: { // all data from components comes here for processign.
+    createMeetup({commit}, payload) {
       const meetup = {
         id: payload.id,
         title: payload.title,
@@ -84,8 +86,51 @@ export const store = new Vuex.Store({
         date: payload.date,
       };
       commit('createMeetup', meetup);
+    },
+    signUserUp({commit}, payload) { // creat a new user action
+      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password) // communication to firebase
+        .then(data => {
+          const newUser = {
+            id: data.uid,
+            registeredMeetups: [],
+          };
+          commit('setUser', newUser)
+        })
+        .catch(error => {
+          console.log('SOME ERROR HAS OCCURED');
+          console.log('error.code: ', error.code);
+          console.log('error.message: ', error.message);
+        })
+    },
+    signUserIn({ commit }, payolad) {
+      firebase.auth().signInWithEmailAndPassword(payolad.email, payolad.password)
+        .then(data => {
+          const userData = {
+            id: data.uid,
+            registeredMeetups: [],
+          };
+          commit('setUser', userData);
+        })
+        .catch(error => {
+          console.log('SOME ERROR HAS OCCURED IN user signin process');
+          console.log('error.code: ', error.code);
+          console.log('error.message: ', error.message);
+        })
+    },
+    signUserOut({ commit }, payolad) {
+      firebase.auth().signOut()
+        .then(data => {
+          const userData = null;
+          commit('setUser', userData);
+        })
+        .catch(error => {
+          console.log('SOME ERROR HAS OCCURED IN user singout process');
+          console.log('error.code: ', error.code);
+          console.log('error.message: ', error.message);
+        })
     }
   },
+  // portal to get the data form state.
   getters: {
     loadedMeetups(state) {
       return state.loadedMeetups.sort((meetupA, meetupB) => {
@@ -101,6 +146,9 @@ export const store = new Vuex.Store({
           return meetup.id == meetupId;
         })
       }
+    },
+    user (state) {
+      return state.user;
     }
   }
 })
