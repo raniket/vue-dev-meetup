@@ -13,6 +13,8 @@ import Signin from '@/components/User/Signin.vue'
 import Signout from '@/components/User/Signout.vue'
 import Experiment from '@/components/experiment/Experiment.vue'
 
+import AuthGuard from './auth-guard'
+
 Vue.use(Router)
 
 export default new Router({
@@ -27,22 +29,26 @@ export default new Router({
       path: '/meetups',
       name: 'Meetups',
       component: Meetups,
+      beforeEnter: AuthGuard,
     },
     {
       path: '/meetup/new',
       name: 'CreateMeetups',
       component: CreateMeetups,
+      beforeEnter: AuthGuard,
     },
     {
       path: '/meetup/:id',
       name: 'Meetup',
       props: true,
       component: Meetup,
+      beforeEnter: AuthGuard,
     },
     {
       path: '/profile',
       name: 'Profile',
       component: Profile,
+      beforeEnter: AuthGuard,
     },
     {
       path: '/signup',
@@ -63,6 +69,7 @@ export default new Router({
       path: '/signout',
       name: 'Signout',
       component: Signout,
+      beforeEnter: AuthGuard
     }
     
   ]

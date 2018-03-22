@@ -6,69 +6,23 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: { // all application data lives here.
-    loadedMeetups: [
-      {
-        imageUrl: 'https://odis.homeaway.com/odis/destination/2b4108ba-cbdb-4505-8950-57b997042ef9.hw1.jpg',
-        id: '1',
-        title: 'Android - This week in Los Angeles',
-        date: new Date(),
-        location: 'Los Angeles',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-      {
-        imageUrl: 'http://www.barfadeiasi.ro/wp-content/uploads/2017/11/londra-t.jpg',
-        id: '2',
-        title: 'Machine Learning - This week in London',
-        date: new Date(),
-        location: 'London',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-      {
-        imageUrl: 'https://www.gezitta.com/wp-content/uploads/2018/01/Berlin-ku%C5%9Fbak%C4%B1%C5%9F%C4%B1-manzaras%C4%B1.jpg',
-        id: '3',
-        title: 'iOS - This week in Berlin',
-        date: new Date(),
-        location: 'Berlin',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-      {
-        imageUrl: 'https://www.deccanjobs.com/wp-content/uploads/2017/03/Bangalore-City.jpg',
-        id: '4',
-        title: 'Node.js - This week in Bangalore',
-        date: new Date(),
-        location: 'Bangalore',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-      {
-        imageUrl: 'http://theflightfinder.com/wp-content/uploads/2017/12/paris.jpg',
-        id: '5',
-        title: 'Go lang - Next week in Paris',
-        date: new Date(),
-        location: 'Paris',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-      {
-        imageUrl: 'http://assets.nydailynews.com/polopoly_fs/1.3004701.1490126108!/img/httpImage/image.jpg_gen/derivatives/landscape_1200/473804254.jpg',
-        id: '6',
-        title: 'Data Science - Next week in New York',
-        date: new Date(),
-        location: 'New York',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-      {
-        imageUrl: 'http://ecowallpapers.net/wp-content/uploads/3912_sidney.jpg',
-        id: '7',
-        title: 'Big Data - This week in Sidney',
-        date: new Date(),
-        location: 'Sidney',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, voluptatum excepturi praesentium, consequatur repudiandae voluptatibus suscipit atque consectetur distinctio, hic natus laborum ipsum. Fugiat architecto blanditiis, perferendis deserunt delectus harum.',
-      },
-    ],
+    loadedMeetups: [],
+    anyMeetups : {},
+    isMeetupsLoaded: false,
     user: null,
     loading: false,
     error: null,
   },
-  mutations: { // get data from actions and set data values in state.
+  mutations: { // modifies data in state object.
+    setLoadedMeetups (state, payload) {
+      state.loadedMeetups = payload;
+    },
+    setAnyMeetups (state, payload) {
+      state.anyMeetups = payload;
+    },
+    setIsMeeupsLoaded(state) {
+      state.isMeetupsLoaded = true;
+    },
     createMeetup(state, payload) {
       state.loadedMeetups.push(payload);
     },
@@ -87,16 +41,50 @@ export const store = new Vuex.Store({
   },
   // the section computes the data, communication from server and send data to mutation.
   actions: { // all data from components comes here for processign.
-    createMeetup({commit}, payload) {
+    // loadMeetups({ commit }) { // realtime update not enabled
+    //   firebase.database().ref('meetup').once('value')
+    //     .then(data => {
+    //       const meetups = [];
+    //       const objs = data.val();
+    //       for (let key in objs) {
+    //         objs[key]['id'] = key;
+    //         meetups.push(objs[key]);
+    //       }
+    //       commit('setLoadedMeetups', meetups);
+    //       commit('setIsMeeupsLoaded');
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //   })
+    // },
+    loadMeetups({ commit }) { // realtime update enabled
+      firebase.database().ref('meetup').on('value', function (snapshot) {
+        const meetups = [];
+        const objs = snapshot.val();
+        for (let key in objs) {
+          objs[key]['id'] = key;
+          if(objs[key]['status'] === 'active')
+            meetups.push(objs[key]);
+        }
+          commit('setLoadedMeetups', meetups);
+          commit('setIsMeeupsLoaded');
+      })
+    },
+    createMeetup({ commit, getters }, payload) {
       const meetup = {
-        id: payload.id,
         title: payload.title,
         location: payload.location,
         imageUrl: payload.imageUrl,
         description: payload.description,
         date: payload.date,
+        creatorId: getters.user.id,
+        status: 'active'
       };
-      commit('createMeetup', meetup);
+      firebase.database().ref('meetup').push(meetup)
+        .then(data => {})
+        .catch(error => {
+          console.log('error for meetup create: ', error);
+        });
     },
     signUserUp({ commit }, payload) { // creat a new user action
       commit('setLoading', true);
@@ -138,6 +126,10 @@ export const store = new Vuex.Store({
           console.log('error.message: ', error.message);
         })
     },
+    autoSignin({ commit }, payload) {
+      console.log('')
+      commit('setUser', { id: payload.id, registeredMeetups: payload.registeredMeetups });
+    },
     signUserOut({ commit }, payolad) {
       firebase.auth().signOut()
         .then(data => {
@@ -170,6 +162,9 @@ export const store = new Vuex.Store({
           return meetup.id == meetupId;
         })
       }
+    },
+    isMeetupsLoaded (state) {
+      return state.isMeetupsLoaded;
     },
     user (state) {
       return state.user;

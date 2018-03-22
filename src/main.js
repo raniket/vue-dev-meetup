@@ -34,7 +34,7 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  created() {
+  created () {
     firebase.initializeApp({
       apiKey: "AIzaSyDNfxxSpN0nMrRfNfrPNtkw5lVOLT01mXE",
       authDomain: "developers-community-380f0.firebaseapp.com",
@@ -49,6 +49,17 @@ new Vue({
       // projectId: process.env.PROJECT_ID,
       // storageBucket: process.env.STORAGE_BUCKET,
       // messagingSenderId: process.env.MESSAGING_SENDER_ID
-    }) 
-  }
+    });
+    firebase.auth().onAuthStateChanged(user => {
+      // console.log('firbase stored users: ', user);
+      if (user) {
+        const locallyStoredUser = {
+          id: user.uid,
+          registeredMeetups: []
+        };
+        this.$store.dispatch('autoSignin', locallyStoredUser);
+      }
+    });
+    this.$store.dispatch('loadMeetups');
+  },
 })

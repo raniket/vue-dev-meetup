@@ -10,8 +10,15 @@
       </v-flex>
     </v-layout>
 
+    <!-- for loader -->
+    <v-layout row wrap class="text-xs-center" v-if="!isMeetupsLoaded">
+      <v-flex xs12 sm6 offset-sm3>
+        <v-progress-circular indeterminate :size="50" color="primary"></v-progress-circular>
+      </v-flex>
+    </v-layout>
+
     <!-- for carousel -->
-    <v-layout raw wrap >
+    <v-layout raw wrap v-if="isMeetupsLoaded && meetups.length > 0">
       <v-flex xs10 offset-xs1>
         <v-carousel xs8 sm8 style="cursor: pointer;">
           <v-carousel-item 
@@ -27,9 +34,16 @@
       </v-flex>
     </v-layout>
 
+    <!-- no meetups message -->
+    <v-layout row wrap v-if="meetups.length === 0 && isMeetupsLoaded">
+      <v-flex xs10 offset-xs1 class="text-xs-center">
+        <h1>No events</h1>
+      </v-flex>
+    </v-layout>
+
     <!-- for message -->
     <v-layout raw wrap>
-      <v-flex xs12 class="text-xs-center text-sm-center" mt-2>
+      <v-flex xs12 class="text-xs-center text-sm-center" mt-2 v-if="meetups.length !== 0">
         <h2 style="color: #FF8F00">Join our awesome developers community!</h2>
       </v-flex>
     </v-layout>
@@ -41,12 +55,17 @@
     data () {
       return {
         loggedin: this.user,
+        noMeetups: false,
+        dataa: 2,
       }
     },
     computed: {
       meetups: function() {
-        return this.$store.getters.featuredMeetups
+        return this.$store.getters.featuredMeetups;
       },
+      isMeetupsLoaded () {
+        return this.$store.getters.isMeetupsLoaded; // initial value: false
+      }
     },
     methods: {
       onLoadMeetup: function(id) {  // go to specific event. NOT WORKING

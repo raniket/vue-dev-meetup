@@ -1,7 +1,7 @@
 <template>
 <v-container>
     <!-- list of meetups -->
-    <v-layout row wrap v-for="meetup in meetups" :key="meetup.id" mb-2>
+    <v-layout row wrap v-for="meetup in meetups" :key="meetup.id" mb-2 v-if="meetups.length > 0">
     <v-flex xs12 sm10  offset-sm1 md10 offset-md1>
       <v-card >
         <v-container fluid>
@@ -27,6 +27,13 @@
           </v-layout>
         </v-container>
       </v-card>
+    </v-flex>
+  </v-layout>
+
+  <!-- no meetups message -->
+  <v-layout row wrap v-if="meetups.length === 0" >
+    <v-flex xs12 class="text-xs-center">
+      <h1>No events to display</h1>
     </v-flex>
   </v-layout>
 </v-container>

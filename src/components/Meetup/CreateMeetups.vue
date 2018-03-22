@@ -129,25 +129,19 @@
 
     methods: {
       onCreateMeetup() {
-        console.log('onclickmeetup called');
+
         if(!this.formIsValid) return;
 
         const meetupData = {
-          id: this.getId(), // fetch form firebase.
           title: this.title,
           location: this.location,
           imageUrl: this.imageUrl,
           description: this.description,
-          date: this.submittableDateTime,
+          date: this.submittableDateTime.toISOString(), // shout be acceptable by database.
         }
-
         this.$store.dispatch('createMeetup', meetupData);
         this.$router.push('/meetups');
       },
-
-      getId(){ // this method should be removed after connecting to firebase ....
-        return  this.$store.state.loadedMeetups.length + 1;
-      }
     }
   }
 </script>
