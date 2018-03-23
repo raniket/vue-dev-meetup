@@ -31,8 +31,10 @@
           <!-- image -->
           <v-layout row>
             <v-flex  >
-              <v-text-field name="imageUrl" id="image-url" label="Image URL" required v-model="imageUrl" >
+              <v-text-field  @click="onPickFile" name="imageUrl" id="image-url" label="Upload Image" required v-model="fileName" >
               </v-text-field>
+              <!-- <v-btn raised class="primary" @click="onPickFile">Upload Image</v-btn> -->
+              <input type="file" style="display: none" ref="fileInput" accept="image/*" @change="onFilePicked">
             </v-flex>
           </v-layout>
 
@@ -83,7 +85,12 @@
           <!-- button -->
           <v-layout>
             <v-flex>
-              <v-btn class="primary" type="submit" round :disabled="!formIsValid">Submit</v-btn>
+              <v-btn class="primary" type="submit" round :loading="loading" :disabled="!formIsValid">
+                Submit
+                <span slot="loader" class="custom-loader">
+                      <v-icon light>cached</v-icon>
+                </span>
+                </v-btn>
             </v-flex>
           </v-layout>
 
@@ -103,7 +110,10 @@
         date: new Date().toISOString().split('T')[0],
         time: new Date(),
         imageUrl: '',
-        description: ''
+        description: '',
+        image: null,
+
+        fileName: '', // to display in file input field.
       }
     },
 
@@ -124,6 +134,9 @@
         }
         return date;
       },
+      loading () {
+        return this.$store.getters.loading;
+      }
 
     },
 
@@ -131,17 +144,37 @@
       onCreateMeetup() {
 
         if(!this.formIsValid) return;
-
+        if(!this.image) return;
         const meetupData = {
           title: this.title,
           location: this.location,
-          imageUrl: this.imageUrl,
+          image: this.image,
           description: this.description,
           date: this.submittableDateTime.toISOString(), // shout be acceptable by database.
         }
         this.$store.dispatch('createMeetup', meetupData);
         this.$router.push('/meetups');
       },
+      onPickFile () {
+        this.$refs.fileInput.click();
+      },
+      onFilePicked (event) {
+        const files = event.target.files;
+        const filename = files[0].name;
+        this.fileName = filename;
+        console.log('files: ', files[0]);
+        if(filename.lastIndexOf('.') <= 0) {
+          return alert('Please upload a valid file');
+        }
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(files[0]);
+        fileReader.addEventListener('load', () => {
+          this.imageUrl = fileReader.result;
+        })
+        // console.log('base64 of the image: ', this.image);
+        this.image = files[0]; // the blob reperesentation of image file.
+        console.log('image : ', this.image);
+      }
     }
   }
 </script>

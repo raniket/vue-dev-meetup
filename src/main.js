@@ -40,7 +40,7 @@ new Vue({
       authDomain: "developers-community-380f0.firebaseapp.com",
       databaseURL: "https://developers-community-380f0.firebaseio.com",
       projectId: "developers-community-380f0",
-      storageBucket: "developers-community-380f0.appspot.com",
+      storageBucket: "gs://developers-community-380f0.appspot.com/",
       messagingSenderId: "1047521904901"
 
       // apiKey: process.env.API_KEY,

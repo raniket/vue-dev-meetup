@@ -58,7 +58,7 @@ export const store = new Vuex.Store({
     //   })
     // },
     loadMeetups({ commit }) { // realtime update enabled
-      firebase.database().ref('meetup').on('value', function (snapshot) {
+      firebase.database().ref('meetups').on('value', function (snapshot) {
         const meetups = [];
         const objs = snapshot.val();
         for (let key in objs) {
@@ -71,18 +71,34 @@ export const store = new Vuex.Store({
       })
     },
     createMeetup({ commit, getters }, payload) {
+      commit('setLoading', true);
       const meetup = {
         title: payload.title,
         location: payload.location,
-        imageUrl: payload.imageUrl,
         description: payload.description,
         date: payload.date,
         creatorId: getters.user.id,
         status: 'active'
       };
-      firebase.database().ref('meetup').push(meetup)
-        .then(data => {})
+      let key = null;
+      firebase.database().ref('meetups').push(meetup) // push the object to database
+        .then(data => {
+          key = data.key;
+          return key;
+        })
+        .then(key => {
+          const filename = payload.image.name;
+          const extension = filename.slice(filename.lastIndexOf('.'));
+          commit('setLoading', false);
+          return firebase.storage().ref('meetups/' + key + extension).put(payload.image); // upload the image to storege
+        })
+        .then(imageData => {
+          const imageURL = imageData.downloadURL;
+          return firebase.database().ref('meetups').child(key).update({ imageUrl: imageURL })
+          
+        })
         .catch(error => {
+          commit('setLoading', false);
           console.log('error for meetup create: ', error);
         });
     },
