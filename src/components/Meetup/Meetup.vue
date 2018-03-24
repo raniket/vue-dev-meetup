@@ -24,6 +24,9 @@
           </div>
         </v-card-title>
         <v-card-actions>
+          <template v-if="userIsCreator">
+            <app-edit-meetup v-bind:meetup="meetup"></app-edit-meetup>
+          </template>
           <v-spacer></v-spacer>
           <v-btn round color="orange" dark class="ml-2" >
             <v-icon left>person_add</v-icon>
@@ -42,6 +45,13 @@
     computed: {
       meetup: function() {
         return this.$store.getters.loadedMeetup(this.id)
+      },
+      userIsAuthenticated () {
+        return (this.$store.getters.user.id !== null && this.$store.getters.user.id !== undefined);
+      },
+      userIsCreator () {
+        if(!this.userIsAuthenticated) return false;
+        return this.$store.getters.user.id === this.meetup.creatorId;
       }
     }
   }

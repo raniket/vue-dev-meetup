@@ -9,10 +9,12 @@ import DateFilter from './filters/date'
 import 'vuetify/dist/vuetify.min.css'
 
 import Alert from './components/Shared/Alert.vue'
+import EditMeetup from './components/Meetup/Edit/EditMeetup.vue'
 
 Vue.filter('date', DateFilter)
 
 Vue.component('app-alert', Alert);
+Vue.component('app-edit-meetup', EditMeetup);
 
 Vue.use(Vuetify, { theme: {
   // primary: '#ee44aa',

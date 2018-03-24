@@ -5,7 +5,7 @@ import * as firebase from 'firebase'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  state: { // all application data lives here.
+  state: {
     loadedMeetups: [],
     anyMeetups : {},
     isMeetupsLoaded: false,
@@ -13,7 +13,7 @@ export const store = new Vuex.Store({
     loading: false,
     error: null,
   },
-  mutations: { // modifies data in state object.
+  mutations: {
     setLoadedMeetups (state, payload) {
       state.loadedMeetups = payload;
     },
@@ -39,25 +39,9 @@ export const store = new Vuex.Store({
       state.error = null;
     },
   },
-  // the section computes the data, communication from server and send data to mutation.
-  actions: { // all data from components comes here for processign.
-    // loadMeetups({ commit }) { // realtime update not enabled
-    //   firebase.database().ref('meetup').once('value')
-    //     .then(data => {
-    //       const meetups = [];
-    //       const objs = data.val();
-    //       for (let key in objs) {
-    //         objs[key]['id'] = key;
-    //         meetups.push(objs[key]);
-    //       }
-    //       commit('setLoadedMeetups', meetups);
-    //       commit('setIsMeeupsLoaded');
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //   })
-    // },
-    loadMeetups({ commit }) { // realtime update enabled
+
+  actions: {
+    loadMeetups({ commit }) {
       firebase.database().ref('meetups').on('value', function (snapshot) {
         const meetups = [];
         const objs = snapshot.val();
@@ -70,6 +54,7 @@ export const store = new Vuex.Store({
           commit('setIsMeeupsLoaded');
       })
     },
+
     createMeetup({ commit, getters }, payload) {
       commit('setLoading', true);
       const meetup = {
@@ -81,7 +66,7 @@ export const store = new Vuex.Store({
         status: 'active'
       };
       let key = null;
-      firebase.database().ref('meetups').push(meetup) // push the object to database
+      firebase.database().ref('meetups').push(meetup)
         .then(data => {
           key = data.key;
           return key;
@@ -90,7 +75,7 @@ export const store = new Vuex.Store({
           const filename = payload.image.name;
           const extension = filename.slice(filename.lastIndexOf('.'));
           commit('setLoading', false);
-          return firebase.storage().ref('meetups/' + key + extension).put(payload.image); // upload the image to storege
+          return firebase.storage().ref('meetups/' + key + extension).put(payload.image);
         })
         .then(imageData => {
           const imageURL = imageData.downloadURL;
@@ -102,10 +87,28 @@ export const store = new Vuex.Store({
           console.log('error for meetup create: ', error);
         });
     },
-    signUserUp({ commit }, payload) { // creat a new user action
+
+    updateMeetupData({ commit }, payload) {
+      commit('setLoading', true);
+      const updateMeetup = {};
+      if (payload.title) updateMeetup.title = payload.title;
+      if (payload.description) updateMeetup.description = payload.description;
+      if (payload.time) updateMeetup.time = payload.time;
+      firebase.database().ref('meetups').child(payload.id).update(updateMeetup)
+        .then(data => {
+          commit('setLoading', false);
+          console.log('meetup updated');
+        })
+        .catch(error => {
+          commit('setLoading', false);
+          console.log('firebase error in updating the meetup');
+        })
+    },
+  
+    signUserUp({ commit }, payload) {
       commit('setLoading', true);
       commit('clearError');
-      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password) // communication to firebase
+      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(data => {
           commit('setLoading', false);
           const newUser = {
@@ -162,7 +165,7 @@ export const store = new Vuex.Store({
       commit('clearError');  
     }
   },
-  // portal to get the data form state.
+
   getters: {
     loadedMeetups(state) {
       return state.loadedMeetups.sort((meetupA, meetupB) => {
