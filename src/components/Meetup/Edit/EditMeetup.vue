@@ -1,8 +1,8 @@
 <template>
   <v-dialog width="350px" persistent v-model="editMeetupDialog">
-    <v-btn fab class="primary" slot="activator" round >
-      <v-icon>edit</v-icon>
-      <!-- edit meetup -->
+    <v-btn  class="primary" slot="activator" round >
+      <v-icon left>edit</v-icon>
+      edit meetup
     </v-btn>
     <v-card >
       <v-layout row wrap>
