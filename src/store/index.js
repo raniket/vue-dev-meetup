@@ -93,7 +93,7 @@ export const store = new Vuex.Store({
       const updateMeetup = {};
       if (payload.title) updateMeetup.title = payload.title;
       if (payload.description) updateMeetup.description = payload.description;
-      if (payload.time) updateMeetup.time = payload.time;
+      if (payload.date) updateMeetup.date = payload.date.toISOString();
       firebase.database().ref('meetups').child(payload.id).update(updateMeetup)
         .then(data => {
           commit('setLoading', false);

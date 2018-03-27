@@ -19,7 +19,9 @@
         <v-card-title>
           <div>
             <span class="gray--text">{{ meetup.date | date }}</span><br>
-            <span class="headline mb-0 ">{{ meetup.title }}</span><br>
+            <!-- <span class="headline mb-0 ">{{ meetup.title }}</span><br> -->
+            <app-edit-meetup-date :meetup="meetup" v-if="userIsCreator" class="text-xs-left"></app-edit-meetup-date>
+            <app-edit-meetup-time :meetup="meetup" v-if="userIsCreator" ></app-edit-meetup-time><br>
             <span class="custom-style">{{ meetup.description }}</span>
           </div>
         </v-card-title>
