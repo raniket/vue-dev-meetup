@@ -6,6 +6,7 @@ import router from './router'
 import Vuetify from 'vuetify'
 import { store } from './store'
 import DateFilter from './filters/date'
+import TimeFilter from './filters/time'
 import 'vuetify/dist/vuetify.min.css'
 
 import Alert from './components/Shared/Alert.vue'
@@ -13,7 +14,11 @@ import EditMeetup from './components/Meetup/Edit/EditMeetup.vue'
 import EditMeetupDate from './components/Meetup/Edit/EditMeetupDate.vue'
 import EditMeetupTime from './components/Meetup/Edit/EditMeetupTime.vue'
 
+// import * as myObjs from './myObjs';
+// Object.defineProperty(Vue.prototype, '$myObjs', { value: myObjs });
+
 Vue.filter('date', DateFilter)
+Vue.filter('time', TimeFilter)
 
 Vue.component('app-alert', Alert);
 Vue.component('app-edit-meetup', EditMeetup);
@@ -40,15 +45,8 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  created () {
+  created() {
     firebase.initializeApp({
-      apiKey: "AIzaSyDNfxxSpN0nMrRfNfrPNtkw5lVOLT01mXE",
-      authDomain: "developers-community-380f0.firebaseapp.com",
-      databaseURL: "https://developers-community-380f0.firebaseio.com",
-      projectId: "developers-community-380f0",
-      storageBucket: "gs://developers-community-380f0.appspot.com/",
-      messagingSenderId: "1047521904901"
-
       // apiKey: process.env.API_KEY,
       // authDomain: process.env.AUTH_DOMAIN,
       // databaseURL: process.env.DATABASE_URL,

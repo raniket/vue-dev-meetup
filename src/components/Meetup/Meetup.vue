@@ -11,16 +11,19 @@
           <v-container fill-height fluid>
             <v-layout fill-height>
               <v-flex xs12 align-end flexbox>
-                <span class="headline">{{ meetup.title }}</span>
+                <span class="headline">{{ meetup.title }}</span><br>
+                <!-- <span class="headline">{{ person.name }} has a {{ car.name }}</span> -->
               </v-flex>
             </v-layout>
           </v-container>
         </v-card-media>
         <v-card-title>
           <div>
-            <span class="gray--text">{{ meetup.date | date }}</span><br>
-            <!-- <span class="headline mb-0 ">{{ meetup.title }}</span><br> -->
-            <app-edit-meetup-date :meetup="meetup" v-if="userIsCreator" class="text-xs-left"></app-edit-meetup-date>
+            <span class="gray--text headline">Date: {{ meetup.date | date }}</span>
+            <span v-if="!userIsCreator" class="mr-4"></span>
+            <app-edit-meetup-date :meetup="meetup" v-if="userIsCreator" class="text-xs-left mr-4"></app-edit-meetup-date>
+
+            <span class="gray--text headline" >Time: {{ meetup.date | time  }}</span>
             <app-edit-meetup-time :meetup="meetup" v-if="userIsCreator" ></app-edit-meetup-time><br>
             <span class="custom-style">{{ meetup.description }}</span>
           </div>
@@ -54,7 +57,14 @@
       userIsCreator () {
         if(!this.userIsAuthenticated) return false;
         return this.$store.getters.user.id === this.meetup.creatorId;
-      }
+      },
+      // person () {
+      //   // console.log('person name: ', this.$person)
+      //   return this.$myObjs.person;
+      // },
+      // car () {
+      //   return this.$myObjs.car;
+      // }
     }
   }
 </script>

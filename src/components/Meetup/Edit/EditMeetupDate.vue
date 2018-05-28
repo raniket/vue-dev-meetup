@@ -1,8 +1,7 @@
 <template>
-  <v-dialog width="350px" persistent v-model="editMeetupDialog">
-    <v-btn  class="primary" slot="activator" round >
-      <v-icon>edit</v-icon>
-      date
+  <v-dialog width="325px" persistent v-model="editMeetupDialog">
+    <v-btn  fab class="primary--text ml-3" slot="activator" flat small right depressed >
+      <v-icon small>edit</v-icon>
     </v-btn>
     <v-card >
       <v-layout row wrap>
@@ -23,6 +22,7 @@
               <template > 
                 <v-btn class="primary--text" flat @click.native="editMeetupDialog = !editMeetupDialog">
                 Cancle</v-btn>
+                <v-spacer></v-spacer>
                 <v-btn class="primary--text" flat @click.native="onSaveChanges">Save</v-btn>
               </template>
             </v-date-picker>
