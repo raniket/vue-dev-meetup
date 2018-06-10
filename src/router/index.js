@@ -11,7 +11,6 @@ import Profile from '@/components/User/Profile.vue'
 import Signup from '@/components/User/Signup.vue'
 import Signin from '@/components/User/Signin.vue'
 import Signout from '@/components/User/Signout.vue'
-import Experiment from '@/components/experiment/Experiment.vue'
 
 import AuthGuard from './auth-guard'
 
@@ -59,11 +58,6 @@ export default new Router({
       path: '/signin',
       name: 'Signin',
       component: Signin,
-    },
-    {
-      path: '/experiment',
-      name: 'Experiment',
-      component: Experiment,
     },
     {
       path: '/signout',

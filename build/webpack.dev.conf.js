@@ -45,6 +45,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
+    new webpack.EnvironmentPlugin({
+      API_KEY: 'AIzaSyDNfxxSpN0nMrRfNfrPNtkw5lVOLT01mXE',
+      AUTH_DOMAIN: 'developers - community - 380 f0.firebaseapp.com',
+      DATABASE_URL: 'https: //developers-community-380f0.firebaseio.com',
+      PROJECT_ID: 'developers - community - 380 f0',
+      STORAGE_BUCKET: 'developers - community - 380 f0.appspot.com',
+      MESSAGING_SENDER_ID: '1047521904901',
+    }),
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),

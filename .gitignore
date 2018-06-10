@@ -16,3 +16,4 @@ src/components/experiment/*
 .env
 imageUrls.js
 #rentwithtez
+utility.txt

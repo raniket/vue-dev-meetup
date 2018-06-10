@@ -50,7 +50,7 @@
                   <v-container fill-height fluid>
                     <v-layout fill-height>
                       <v-flex xs12 align-end flexbox>
-                        <span class="headline">This is the preview of image</span>
+                        <span class="headline white--text">This is the preview of image</span>
                       </v-flex>
                     </v-layout>
                   </v-container>
@@ -113,7 +113,7 @@
         description: '',
         image: null,
 
-        fileName: '', // to display in file input field.
+        fileName: '',
       }
     },
 
@@ -150,8 +150,9 @@
           location: this.location,
           image: this.image,
           description: this.description,
-          date: this.submittableDateTime.toISOString(), // shout be acceptable by database.
+          date: this.submittableDateTime.toISOString(),
         }
+        console.log('----- data: ', meetupData);
         this.$store.dispatch('createMeetup', meetupData);
         this.$router.push('/meetups');
       },
@@ -171,8 +172,7 @@
         fileReader.addEventListener('load', () => {
           this.imageUrl = fileReader.result;
         })
-        // console.log('base64 of the image: ', this.image);
-        this.image = files[0]; // the blob reperesentation of image file.
+        this.image = files[0];
         console.log('image : ', this.image);
       }
     }

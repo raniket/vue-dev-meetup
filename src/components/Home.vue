@@ -54,9 +54,7 @@
   export default {
     data () {
       return {
-        loggedin: this.user,
-        noMeetups: false,
-        dataa: 2,
+
       }
     },
     computed: {

@@ -12,7 +12,6 @@
             <v-layout fill-height>
               <v-flex xs12 align-end flexbox>
                 <span class="headline">{{ meetup.title }}</span><br>
-                <!-- <span class="headline">{{ person.name }} has a {{ car.name }}</span> -->
               </v-flex>
             </v-layout>
           </v-container>
@@ -29,14 +28,9 @@
           </div>
         </v-card-title>
         <v-card-actions>
-          <template v-if="userIsCreator">
-            <app-edit-meetup v-bind:meetup="meetup"></app-edit-meetup>
-          </template>
+            <app-edit-meetup :meetup="meetup" v-if="userIsCreator"></app-edit-meetup>
           <v-spacer></v-spacer>
-          <v-btn round color="orange" dark class="ml-2" >
-            <v-icon left>person_add</v-icon>
-            Reginster
-          </v-btn>
+          <app-register-dialog :meetupId="meetup.id" v-if="!userIsCreator"></app-register-dialog>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -58,13 +52,6 @@
         if(!this.userIsAuthenticated) return false;
         return this.$store.getters.user.id === this.meetup.creatorId;
       },
-      // person () {
-      //   // console.log('person name: ', this.$person)
-      //   return this.$myObjs.person;
-      // },
-      // car () {
-      //   return this.$myObjs.car;
-      // }
     }
   }
 </script>

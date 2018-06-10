@@ -5,6 +5,7 @@
       edit meetup
     </v-btn>
     <v-card >
+      <!-- header -->
       <v-layout row wrap>
         <v-flex xs12>
           <v-card-title>

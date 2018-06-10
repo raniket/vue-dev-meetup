@@ -67,7 +67,6 @@ export default {
           {icon: 'create', title: 'Create Events', link: '/meetup/new'},
           {icon: 'person', title: 'Profile', link: '/profile'},
           {icon: 'exit_to_app', title: 'Sign out', link: '/signout'},
-          // {icon: 'extension', title: 'Experiments', link: '/experiment'},
         ];
       }
       return menuItems;
