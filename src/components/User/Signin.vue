@@ -8,7 +8,8 @@
 
     <v-layout row v-if="error" >
       <v-flex xs12 sm6 offset-sm3>
-        <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+        <!-- <app-alert @dismissed="onDismissed" :text="error"></app-alert> -->
+        <app-signin-alert @dismissed="onDismissed" :text="error"></app-signin-alert>
       </v-flex>
     </v-layout>
 
@@ -109,6 +110,7 @@
     methods: {
       onSignin() { // sign up button method.
         this.$store.dispatch('signUserIn', { email: this.email, password: this.password});
+        this.$store.dispatch('loadMeetups');
       },
       onDismissed () {
         this.$store.dispatch('clearError');

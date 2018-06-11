@@ -8,7 +8,8 @@
 
     <v-layout row v-if="error">
       <v-flex xs12 sm6 offset-sm3>
-        <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+        <!-- <app-alert @dismissed="onDismissed" :text="error"></app-alert> -->
+        <app-signup-alert @dismissed="onDismissed" :text="error"></app-signup-alert>
       </v-flex>
     </v-layout>
 
