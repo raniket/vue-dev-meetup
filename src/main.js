@@ -48,7 +48,7 @@ new Vue({
   store,
   render: h => h(App),
   beforeCreate() {
-    // on page referesh redirect user to home page.
+
     if (window.performance.navigation.type == 1)
       this.$router.push('/');
 
