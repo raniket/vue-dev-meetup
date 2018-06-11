@@ -13,6 +13,7 @@
   "dependencies": {
     "dotenv-webpack": "^1.5.7",
     "firebase": "^4.11.0",
+    "lodash": "^4.17.10",
     "vue": "^2.5.2",
     "vue-c3": "^1.1.1",
     "vue-router": "^3.0.1",

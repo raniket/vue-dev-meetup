@@ -41,12 +41,17 @@ Vue.use(Vuetify, {
 
 Vue.config.productionTip = false;
 
+/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App),
   beforeCreate() {
+    // on page referesh redirect user to home page.
+    if (window.performance.navigation.type == 1)
+      this.$router.push('/');
+
     firebase.initializeApp({
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,
@@ -60,9 +65,9 @@ new Vue({
       if (user) {
         const locallyStoredUser = {
           id: user.uid,
-          registeredMeetups: []
         };
         this.$store.dispatch('autoSignin', locallyStoredUser);
+        this.$store.dispatch('loadUserData', locallyStoredUser);
       }
     });
 

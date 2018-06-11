@@ -18,14 +18,13 @@
     </v-layout>
 
     <!-- for carousel -->
-    <v-layout raw wrap v-if="isMeetupsLoaded && meetups.length > 0">
-      <v-flex xs10 offset-xs1>
-        <v-carousel xs8 sm8 style="cursor: pointer;">
+    <v-layout class="carouselHeight" raw wrap v-if="isMeetupsLoaded && meetups.length > 0">
+      <v-flex  xs10 offset-xs1 xl10 offset-xl1>
+        <v-carousel xs8 sm8 xl8 style="cursor: pointer;">
           <v-carousel-item 
           v-for="meetup in meetups" 
           :src="meetup.imageUrl" 
-          :key="meetup.id" 
-          @click="onLoadMeetup(meetup.id)"
+          :key="meetup.id"
           style="text-decoration:none"
           :to="'/meetup/'+meetup.id" >
             <div class="title">{{ meetup.title }}</div>
@@ -44,7 +43,7 @@
     <!-- for message -->
     <v-layout raw wrap>
       <v-flex xs12 class="text-xs-center text-sm-center" mt-2 v-if="meetups.length !== 0">
-        <h2 style="color: #FF8F00">Join our awesome developers community!</h2>
+        <h2 style="color: #FF8F00">Upcomming Events!</h2>
       </v-flex>
     </v-layout>
   </v-container>
@@ -65,11 +64,6 @@
         return this.$store.getters.isMeetupsLoaded; // initial value: false
       }
     },
-    methods: {
-      onLoadMeetup: function(id) {  // go to specific event. NOT WORKING
-        this.$router.push('/meetup/' + id);
-      }
-    },
   }
 </script>
 
@@ -80,5 +74,13 @@
   text-align: center;
   font-size: 2em;
   color: white;
+}
+
+.carouselHeight {
+  height: auto;
+}
+
+@media only screen and (min-width: 1200px) {
+    .carouselHeight{height: 70%;}
 }
 </style>

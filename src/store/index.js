@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as firebase from 'firebase'
+import * as _ from 'lodash'
 
 Vue.use(Vuex)
 
@@ -9,7 +10,11 @@ export const store = new Vuex.Store({
     loadedMeetups: [],
     anyMeetups : {},
     isMeetupsLoaded: false,
-    user: null,
+    user: {
+      id: null,
+      registeredMeetups: [],
+    },
+    userData: null,
     loading: false,
     error: null,
   },
@@ -30,6 +35,12 @@ export const store = new Vuex.Store({
     setUser(state, payload) {
       state.user = payload;
     },
+    setUserData(state, payload) {
+      state.userData = payload;
+    },
+    setRegisteredMeetups(state, payload) {
+      state.user.registeredMeetups = payload;
+    },
     setLoading(state, payload) {
       state.loading = payload;
     },
@@ -39,17 +50,6 @@ export const store = new Vuex.Store({
     clearError(state) {
       state.error = null;
     },
-    registerUserForMeetup(state, payload) {
-      const id = payload.id;
-      if (state.user.registeredMeetups.indexOf(meetup => meetup === id) >= 0) return;
-      state.user.registeredMeetups.push(payload.id);
-      state.user.firebaseKey[id] = payload.firebaseKey;
-    },
-    unregisterUserFromMeetup(state, payload) {
-      const registeredMeetups = state.user.registeredMeetups;
-      registeredMeetups.splice(registeredMeetups.findIndex(meetup => meetup.id === payload), 1);
-      Reflect.deleteProperty(state.user.firebaseKey, payload);
-    }
   },
 
   actions: {
@@ -125,7 +125,6 @@ export const store = new Vuex.Store({
           const newUser = {
             id: data.uid,
             registeredMeetups: [],
-            firebaseKey: {},
           };
           commit('setUser', newUser)
         })
@@ -145,7 +144,6 @@ export const store = new Vuex.Store({
           const userData = {
             id: data.uid,
             registeredMeetups: [],
-            firebaseKey: {},
           };
           commit('setUser', userData);
         })
@@ -160,9 +158,22 @@ export const store = new Vuex.Store({
       console.log('')
       commit('setUser', {
         id: payload.id,
-        registeredMeetups: payload.registeredMeetups,
-        firebaseKey: {},
+        registeredMeetups: [],
       });
+    },
+
+    loadUserData({ commit, getters }, payload) {
+      const userId = payload.id;
+      firebase.database().ref('users').child(userId).on('value', function (snapshot) {
+        const userData = snapshot.val();
+        if (userData === null) {
+          commit('setRegisteredMeetups', [])
+          return;
+        }
+        commit('setUserData', userData);
+        let registeredMeetups = _.valuesIn(userData.registrations);
+        commit('setRegisteredMeetups', registeredMeetups);
+      })
     },
 
     signUserOut({ commit }, payolad) {
@@ -186,7 +197,6 @@ export const store = new Vuex.Store({
       firebase.database().ref('/users/' + user.id).child('/registrations/').push(payload)
         .then(data => {
           commit('setLoading', false);
-          commit('registerUserForMeetup', { id: payload, firebaseKey: data.key });
         })
         .catch(error => {
           console.log('state|actions|registerUserForMeetup|firebase|catch: ', error);
@@ -197,12 +207,10 @@ export const store = new Vuex.Store({
     unregisterUserFromMeetup({ commit, getters }, payload) {
       commit('setLoading', true);
       const user = getters.user;
-      if (!user.firebaseKey) return;
-      const firebaseKey = user.firebaseKey[payload];
-      firebase.database().ref('/users/' + user.id + '/registrations/').child(firebaseKey).remove()
+      const meetupFirebaseKey = _.findKey(getters.userData.registrations, (value) => value === payload);
+      firebase.database().ref('/users/' + user.id + '/registrations/').child(meetupFirebaseKey).remove()
         .then(data => {
           commit('setLoading', false);
-          commit('unregisterUserFromMeetup', payload);
         })
         .catch(error => {
           console.log('state|actions|unregisterUserFromMeetup|error: ', error);
@@ -232,6 +240,9 @@ export const store = new Vuex.Store({
     },
     user (state) {
       return state.user;
+    },
+    userData (state) {
+      return state.userData;
     },
     loading (state) {
       return state.loading;
