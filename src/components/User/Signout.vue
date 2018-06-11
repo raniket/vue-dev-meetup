@@ -17,7 +17,7 @@
     },
     watch: {
       user (value) {
-        if (value === null) this.$router.push('/')
+        if (value.id === null) this.$router.push('/')
       }
     },
     created () {

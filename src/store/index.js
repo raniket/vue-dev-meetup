@@ -53,26 +53,26 @@ export const store = new Vuex.Store({
   },
 
   actions: {
-    // loadMeetups({ commit, getters }) { // realtime update not enabled
-    //   console.log('----- user details: ', getters.user);
-    //   firebase.database().ref('meetups').once('value')
-    //     .then(data => {
-    //       console.log('Started loading meetups');
-    //       const meetups = [];
-    //       const objs = data.val();
-    //       for (let key in objs) {
-    //         objs[key]['id'] = key;
-    //         if (objs[key]['status'] === 'active')
-    //           meetups.push(objs[key]);
-    //       }
-    //       commit('setLoadedMeetups', meetups);
-    //       console.log('MEETUP IS LOADED: DATA: ', meetups);
-    //       commit('setIsMeeupsLoaded');
-    //     })
-    //     .catch(error => {
-    //       console.log('state|action|ladMeetups|catch error:', error);
-    //   })
-    // },
+    loadMeetups({ commit, getters }) { // realtime update not enabled
+      console.log('----- user details: ', getters.user);
+      firebase.database().ref('meetups').once('value')
+        .then(data => {
+          console.log('Started loading meetups');
+          const meetups = [];
+          const objs = data.val();
+          for (let key in objs) {
+            objs[key]['id'] = key;
+            if (objs[key]['status'] === 'active')
+              meetups.push(objs[key]);
+          }
+          commit('setLoadedMeetups', meetups);
+          console.log('MEETUP IS LOADED: DATA: ', meetups);
+          commit('setIsMeeupsLoaded');
+        })
+        .catch(error => {
+          console.log('state|action|ladMeetups|catch error:', error);
+      })
+    },
 
     loadMeetups({ commit, getters }) { // realtime update enabled
       console.log('----- user details: ', getters.user);
@@ -82,12 +82,12 @@ export const store = new Vuex.Store({
         const objs = snapshot.val();
         for (let key in objs) {
           objs[key]['id'] = key;
-          if(objs[key]['status'] === 'active')
+          if (objs[key]['status'] === 'active')
             meetups.push(objs[key]);
         }
         commit('setLoadedMeetups', meetups);
         console.log('MEETUP IS LOADED: DATA: ', meetups);
-          commit('setIsMeeupsLoaded');
+        commit('setIsMeeupsLoaded');
       })
     },
 
@@ -203,7 +203,10 @@ export const store = new Vuex.Store({
     signUserOut({ commit }, payolad) {
       firebase.auth().signOut()
         .then(data => {
-          const userData = null;
+          const userData = {
+            id: null,
+            registeredMeetups: []
+          };
           commit('setUser', userData);
         })
         .catch(error => {
