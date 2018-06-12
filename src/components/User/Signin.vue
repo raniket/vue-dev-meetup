@@ -94,7 +94,7 @@
         return this.$store.getters.loading;
       },
       error () {
-        return this.$store.getters.error;
+        return this.$store.getters.error.signInError;
       },
     },
     watch: {

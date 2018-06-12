@@ -16,7 +16,10 @@ export const store = new Vuex.Store({
     },
     userData: null,
     loading: false,
-    error: null,
+    error: {
+      signInError: null,
+      signUnError: null,
+    },
   },
 
   mutations: {
@@ -45,10 +48,14 @@ export const store = new Vuex.Store({
       state.loading = payload;
     },
     setError(state, payload) {
-      state.error = payload;
+      if (payload.signInError) state.error['signInError'] = payload.signInError;
+      if (payload.signUpError) state.error['signUpError'] = payload.signUpError;
     },
     clearError(state) {
-      state.error = null;
+      state.error = {
+        signInError: null,
+        signUpError: null,
+      };
     },
   },
 
@@ -152,7 +159,7 @@ export const store = new Vuex.Store({
         })
         .catch(error => {
           commit('setLoading', false);
-          commit('setError', error);
+          commit('setError', {signUpError: error});
           console.log('state|action|signUserUp|catch error: ', error);
         })
     },
@@ -170,7 +177,7 @@ export const store = new Vuex.Store({
         })
         .catch(error => {
           commit('setLoading', false);
-          commit('setError', error);
+          commit('setError', {signInError: error});
           console.log('state|action|signUserIn|catch error: ', error);
         })
     },
