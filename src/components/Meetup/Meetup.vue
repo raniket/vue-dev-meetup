@@ -27,10 +27,19 @@
             <span class="custom-style">{{ meetup.description }}</span>
           </div>
         </v-card-title>
-        <v-card-actions v-if="userLogedIn">
+        <v-card-actions>
+          <span v-if="userLogedIn">
             <app-edit-meetup :meetup="meetup" v-if="userIsCreator"></app-edit-meetup>
-          <v-spacer></v-spacer>
-          <app-register-dialog :meetupId="meetup.id" v-if="!userIsCreator"></app-register-dialog>
+            <v-spacer></v-spacer>
+            <app-register-dialog :meetupId="meetup.id" v-if="!userIsCreator"></app-register-dialog>
+          </span>
+
+          <span v-else>
+            <v-btn  class="primary" round @click="toSignin">
+              <v-icon >add</v-icon>
+              Register
+            </v-btn>
+          </span>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -55,6 +64,11 @@
       userLogedIn () {
         return this.$store.getters.user.id;
       },
+    },
+    methods: {
+      toSignin() {
+        this.$router.push('/signin');
+      }
     }
   }
 </script>
