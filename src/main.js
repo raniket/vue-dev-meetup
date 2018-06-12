@@ -48,14 +48,6 @@ new Vue({
   store,
   render: h => h(App),
   beforeCreate() {
-    if (window.performance.navigation.type == 1) {
-      // if (this.$store.getters.user.id === null)
-        // console.log('----- no user found: user: ', this.$store.getters.user)
-      this.$router.push('/');
-      console.log('---- redirecting to home page');
-    }
-      // this.$router.push('/');
-
     firebase.initializeApp({
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,

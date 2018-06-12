@@ -53,31 +53,30 @@ export const store = new Vuex.Store({
   },
 
   actions: {
-    loadMeetups({ commit, getters }) { // realtime update not enabled
-      console.log('----- user details: ', getters.user);
-      firebase.database().ref('meetups').once('value')
-        .then(data => {
-          console.log('Started loading meetups');
-          const meetups = [];
-          const objs = data.val();
-          for (let key in objs) {
-            objs[key]['id'] = key;
-            if (objs[key]['status'] === 'active')
-              meetups.push(objs[key]);
-          }
-          commit('setLoadedMeetups', meetups);
-          console.log('MEETUP IS LOADED: DATA: ', meetups);
-          commit('setIsMeeupsLoaded');
-        })
-        .catch(error => {
-          console.log('state|action|ladMeetups|catch error:', error);
-      })
-    },
+    // loadMeetups({ commit, getters }) { // realtime update not enabled
+    //   console.log('----- user details: ', getters.user);
+    //   firebase.database().ref('meetups').once('value')
+    //     .then(data => {
+    //       console.log('Started loading meetups');
+    //       const meetups = [];
+    //       const objs = data.val();
+    //       for (let key in objs) {
+    //         objs[key]['id'] = key;
+    //         if (objs[key]['status'] === 'active')
+    //           meetups.push(objs[key]);
+    //       }
+    //       console.log('----- App start Loaded Meetups: ', meetups);
+    //       commit('setLoadedMeetups', meetups);
+    //       console.log('MEETUP IS LOADED: DATA: ', meetups);
+    //       commit('setIsMeeupsLoaded');
+    //     })
+    //     .catch(error => {
+    //       console.log('state|action|loadMeetups|catch error:', error);
+    //   })
+    // },
 
     loadMeetups({ commit, getters }) { // realtime update enabled
-      console.log('----- user details: ', getters.user);
       firebase.database().ref('meetups').on('value', function (snapshot) {
-        console.log('Started loading meetups');
         const meetups = [];
         const objs = snapshot.val();
         for (let key in objs) {
@@ -86,7 +85,6 @@ export const store = new Vuex.Store({
             meetups.push(objs[key]);
         }
         commit('setLoadedMeetups', meetups);
-        console.log('MEETUP IS LOADED: DATA: ', meetups);
         commit('setIsMeeupsLoaded');
       })
     },
@@ -169,7 +167,6 @@ export const store = new Vuex.Store({
             id: data.uid,
           };
           commit('setUser', userData);
-          console.log('----- user is signed in, userData: ', userData);
         })
         .catch(error => {
           commit('setLoading', false);
