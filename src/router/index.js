@@ -41,7 +41,7 @@ export default new Router({
       name: 'Meetup',
       props: true,
       component: Meetup,
-      beforeEnter: AuthGuard,
+      // beforeEnter: AuthGuard,
     },
     {
       path: '/profile',
