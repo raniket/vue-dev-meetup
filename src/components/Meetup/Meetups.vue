@@ -19,7 +19,7 @@
               </v-card-title>
               <v-card-actions>
                 <v-btn flat v-bind:to="'/meetup/' + meetup.id" >
-                  <v-icon left>remove_red_eye</v-icon>
+                  <v-icon left>open_in_browser</v-icon>
                   View This Event
                 </v-btn>
               </v-card-actions>

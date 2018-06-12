@@ -58,14 +58,14 @@ export default {
   computed: {
     menuItems () {
       let menuItems = [
-        {icon: 'face', title: 'Sign up', link: '/signup'},
+        {icon: 'person_add', title: 'Sign up', link: '/signup'},
         {icon: 'lock', title: 'Sing in', link: '/signin'},
       ];
       if(this.$store.getters.user.id !== null) {
         menuItems = [
           {icon: 'view_list', title: 'View Events', link: '/meetups'},
           {icon: 'create', title: 'Create Events', link: '/meetup/new'},
-          {icon: 'person', title: 'Profile', link: '/profile'},
+          {icon: 'account_box', title: 'Profile', link: '/profile'},
           {icon: 'exit_to_app', title: 'Sign out', link: '/signout'},
         ];
       }
