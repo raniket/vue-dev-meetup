@@ -53,11 +53,23 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('user')) {
+          alert('You neet to signout first. If you want to go back!');
+          next(false);
+        } else next();
+      },
     },
     {
       path: '/signin',
       name: 'Signin',
       component: Signin,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('user')) {
+          alert('You neet to signout first. If you want to go back!');
+          next(false);
+        } else next();
+      },
     },
     {
       path: '/signout',
