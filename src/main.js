@@ -57,15 +57,14 @@ new Vue({
       messagingSenderId: process.env.MESSAGING_SENDER_ID
     });
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const locallyStoredUser = {
-          id: user.uid,
-        };
-        this.$store.dispatch('autoSignin', locallyStoredUser);
-        this.$store.dispatch('loadUserData', locallyStoredUser);
+
+    if (localStorage.getItem('user') != null) {
+      const locallyStoredUser = {
+        id: localStorage.getItem('user'),
       }
-    });
+      this.$store.dispatch('autoSignin', locallyStoredUser);
+      this.$store.dispatch('loadUserData', locallyStoredUser);
+    }
 
     this.$store.dispatch('loadMeetups');
 

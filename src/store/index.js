@@ -155,6 +155,7 @@ export const store = new Vuex.Store({
             id: data.uid,
             registeredMeetups: [],
           };
+          localStorage.setItem('user', data.uid);
           commit('setUser', newUser)
         })
         .catch(error => {
@@ -173,6 +174,7 @@ export const store = new Vuex.Store({
           const userData = {
             id: data.uid,
           };
+          localStorage.setItem('user', data.uid);
           commit('setUser', userData);
         })
         .catch(error => {
@@ -184,6 +186,7 @@ export const store = new Vuex.Store({
 
     autoSignin({ commit }, payload) {
       console.log('')
+      localStorage.setItem('user', payload.id);
       commit('setUser', {
         id: payload.id,
         registeredMeetups: [],
@@ -211,6 +214,7 @@ export const store = new Vuex.Store({
             id: null,
             registeredMeetups: []
           };
+          localStorage.removeItem("user");
           commit('setUser', userData);
         })
         .catch(error => {
